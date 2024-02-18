@@ -1,0 +1,20 @@
+//
+// API ENDPOINT DOCUMENTS
+//
+
+// SKAPA DOCUMENT
+GET http://localhost:3000/documents
+
+###
+
+// SKAPA DOCUMENT
+POST http://localhost:3000/documents
+Content-Type: application/json
+
+{ 
+  "title": "Låtidén 231224",
+  "content": "Vestibulum facilisis purus nec",
+  "userId": "1"
+}
+
+###
