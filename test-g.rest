@@ -2,7 +2,7 @@
 // API ENDPOINT DOCUMENTS
 //
 
-// SKAPA DOCUMENT
+// HÄMTA DOCUMENT
 GET http://localhost:3000/documents
 
 ###

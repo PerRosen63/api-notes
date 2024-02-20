@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
     //res.send('productlines');
     
   
-    let sql = `SELECT title, content, createDate FROM documents`;
+    let sql = `SELECT documentId, title, content, createDate, userId FROM documents`;
   
     req.app.locals.con.query(sql, function(err, result) {
       if (err) {
