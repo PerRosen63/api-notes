@@ -12,9 +12,31 @@ POST http://localhost:3000/documents
 Content-Type: application/json
 
 { 
-  "title": "Låtidén 231224",
-  "content": "Vestibulum facilisis purus nec",
-  "userId": "1"
+  "title": "Låtlista 231218",
+  "content": "Vestibulum purus nec",
+  "userId": "2"
+}
+
+###
+
+// ÄNDRA DOCUMENT
+PATCH http://localhost:3000/documents
+Content-Type: application/json
+
+{ 
+  "title": "Låtidén 231224_ny",
+  "content": "Ändrad Vestibulum facilisis purus nec",
+  "documentId": "2"
+}
+
+###
+
+// DELETE DOCUMENT
+DELETE http://localhost:3000/documents
+Content-Type: application/json
+
+{ 
+  "documentId": "2"
 }
 
 ###

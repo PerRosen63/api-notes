@@ -43,4 +43,51 @@ router.post('/', (req, res) => {
     })
 })
 
+/* PATCH documents */
+router.patch('/', (req, res) => {
+  console.log('hej patch'); 
+
+  let title = req.body.title;
+  let content = req.body.content;
+
+  let documentId = req.body.documentId;
+  console.log(documentId);
+
+  req.app.locals.con.connect((err) => {
+      if (err) console.log('err', err);
+
+      let query = "UPDATE documents SET title = ?, content = ? WHERE documentId = ?";
+      let values = [title, content, documentId];
+
+      req.app.locals.con.query(query, values, (err, data) => {
+          if (err) console.log('err', err);
+
+          console.log('documents', data);
+          res.json({message: "document ändrat"}); 
+      })
+  })
+})
+
+/* DELETE document */
+router.delete('/', (req, res) => {
+  console.log('hej delete'); 
+
+  let documentId = req.body.documentId;
+  console.log(documentId);
+
+  req.app.locals.con.connect((err) => {
+      if (err) console.log('err', err);
+
+      let query = "DELETE FROM documents WHERE documentId = ?";
+      let values = [documentId];
+
+      req.app.locals.con.query(query, values, (err, data) => {
+          if (err) console.log('err', err);
+
+          console.log('documents', data);
+          res.json({message: "document raderat"}); 
+      })
+  })
+})
+
 module.exports = router;
