@@ -1,5 +1,3 @@
-const h1 = document.getElementById('title1');
-
 let main = document.getElementById('main');
 let leftCol = document.getElementById('leftCol');
 let docList = document.getElementById('docList');
@@ -9,15 +7,20 @@ title.setAttribute('id', 'title');
 const textResult = document.createElement('div');
 textResult.setAttribute('id', 'textResult');
 
+leftCol.prepend(textResult);
+leftCol.prepend(title);
+
+//create btn
 let createBtnBox = document.createElement('createBtnBox');
 main.prepend(createBtnBox);
 let createBtn = document.createElement('button');
 createBtn.setAttribute('id', 'createBtn');
 createBtn.innerText = 'Skapa dokument';
 
-let editBtnBox = document.editElement('editBtnBox');
-main.prepend(editBtnBox);
-let editBtn = document.editElement('button');
+//Edit btn
+let editBtnBox = document.createElement('editBtnBox');
+leftCol.appendChild(editBtnBox);
+let editBtn = document.createElement('button');
 editBtn.setAttribute('id', 'editBtn');
 editBtn.innerText = 'Redigera dokument';
 
@@ -30,15 +33,21 @@ let inputTitle = document.createElement('input');
 inputTitle.setAttribute('type', 'text');
 let textArea = document.createElement('textarea');
 textArea.setAttribute('id', 'textArea');
+
+// Spara skapat dokument
 let saveBtn = document.createElement('button');
 saveBtn.setAttribute('id', 'saveBtn');
 saveBtn.innerText = 'Spara dokument';
 
-//let li = document.createElement('li');
-//let span = document.createElement('span');
+// Spara redigerat dokument
+let saveEditBtn = document.createElement('button');
+saveEditBtn.setAttribute('id', 'saveEditBtn');
+saveEditBtn.innerText = 'Spara ändrat dokument';
+
+/*****************TinyMCE *************/
 
 function tinyMce() {
-    console.log('init TinyMCE');
+    //console.log('init TinyMCE');
 tinymce.init({
     selector: '#textArea',
     //target: textArea,
@@ -52,11 +61,6 @@ tinymce.init({
 })
 }
 
-
-/* docList.addEventListener('click', () => {
-    createDocBtn();
-    }) */
-
 // Knapp Skapa dokument
 
 function createDocBtn() {
@@ -64,9 +68,10 @@ function createDocBtn() {
 }
             
 createBtn.addEventListener('click', () => {
-    console.log('createDOcBtn');
+    console.log('createDocBtn');
 
     createBtnBox.innerHTML = '';
+    editBtnBox.innerHTML = '';
     title.innerHTML = '';
     textResult.innerHTML = '';
     inputs.prepend(inputTitle);
@@ -76,32 +81,40 @@ createBtn.addEventListener('click', () => {
 })    
 
 
-// Print documents
+// Knapp redigera dokument
 
-/* function printDoc() {
-    fetch('http://localhost:3000/documents')
-    .then(res => res.json())
-    .then(data => {
-        
-        // Title and content from Latest date document
-        const latest = data.sort((a ,b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime());
-        
-        leftCol.appendChild(title);
-        title.innerText = latest[0].title;
-        leftCol.appendChild(textResult);
-        textResult.innerHTML = latest[0].content;
-        //End latest
+function editDocBtn(documentId, title, content) { // från map loopen i list/print
+    //console.log('edit doc btn', documentId);
+    editBtnBox.appendChild(editBtn);
+            
+editBtn.addEventListener('click', () => {
+    
+    createBtnBox.innerHTML = '';
+    editBtnBox.innerHTML = '';
+    title.innerHTML = '';
+    textResult.innerHTML = '';
+    inputs.prepend(inputTitle);
+    inputs.appendChild(textArea);
+    tinyMce();
+    
+    //console.log('event edit', documentId);
+    inputTitle.value = title;
+    textArea.value = content;
 
-        listDoc();
+    saveEditDoc(documentId);
+    inputs.appendChild(saveEditBtn);
 
-        createDocBtn();
+})
 
-        
-    })
-} */
+saveEditBtn.addEventListener('click', saveEditDoc);
 
-//printDoc();
+}
 
+// Ändra PATCH dokument
+
+function saveEditDoc(documentId) {
+    console.log('saveEditDoc', documentId);
+}
 
 
 // List documents sidebar
@@ -115,14 +128,12 @@ function listDoc() {
      // Title and content from Latest date document
      const latest = data.sort((a ,b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime());
         
-     leftCol.appendChild(title);
-     title.innerText = latest[0].title;
-     leftCol.appendChild(textResult);
      textResult.innerHTML = latest[0].content;
-     //End latest
+     title.innerText = latest[0].title;
+     // End latest
 
      let currentId = latest[0].documentId;
-     console.log('current/latest id', currentId);
+     //console.log('current/latest id', currentId);
 
     data.map(doc => {
 
@@ -135,24 +146,31 @@ function listDoc() {
         docList.appendChild(li);
         li.appendChild(span);
 
-        // Click in list to print content
+        // Click in list to print content for clicked id
         li.addEventListener('click', () => {
             
             currentId = doc.documentId;
 
-            console.log('nuvarande id', currentId );
+            //console.log('nuvarande id', currentId );
+
             title.innerText = doc.title;
             textResult.innerHTML = doc.content;
             inputs.innerHTML = '';
             createDocBtn();
+            editDocBtn(doc.documentId, doc.title, doc.content);
             
         })
+
     })
     createDocBtn();
-    })
+    //editDocBtn();
+})
 }
 
 listDoc();
+
+
+
 
 // Skapa POST dokument
 
@@ -181,8 +199,6 @@ listDoc();
         docList.innerHTML = '';
         inputs.innerHTML = '';
         listDoc();
-
-
     })
 
 
