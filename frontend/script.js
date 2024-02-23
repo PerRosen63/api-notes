@@ -78,44 +78,7 @@ createBtn.addEventListener('click', () => {
     inputs.appendChild(textArea);
     tinyMce();
     inputs.appendChild(saveBtn);
-})    
-
-
-// Knapp redigera dokument
-
-function editDocBtn(documentId, title, content) { // från map loopen i list/print
-    //console.log('edit doc btn', documentId);
-    editBtnBox.appendChild(editBtn);
-            
-editBtn.addEventListener('click', () => {
-    
-    createBtnBox.innerHTML = '';
-    editBtnBox.innerHTML = '';
-    title.innerHTML = '';
-    textResult.innerHTML = '';
-    inputs.prepend(inputTitle);
-    inputs.appendChild(textArea);
-    tinyMce();
-    
-    //console.log('event edit', documentId);
-    inputTitle.value = title;
-    textArea.value = content;
-
-    saveEditDoc(documentId);
-    inputs.appendChild(saveEditBtn);
-
-})
-
-saveEditBtn.addEventListener('click', saveEditDoc);
-
-}
-
-// Ändra PATCH dokument
-
-function saveEditDoc(documentId) {
-    console.log('saveEditDoc', documentId);
-}
-
+})  
 
 // List documents sidebar
 
@@ -125,16 +88,15 @@ function listDoc() {
     .then(res => res.json())
     .then(data => {
     
-     // Title and content from Latest date document
-     const latest = data.sort((a ,b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime());
-        
-     textResult.innerHTML = latest[0].content;
-     title.innerText = latest[0].title;
-     // End latest
+    // Title and content from Latest date document
+    const latest = data.sort((a ,b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime());
+    
+    textResult.innerHTML = latest[0].content;
+    title.innerText = latest[0].title;
+    // End latest
 
-     let currentId = latest[0].documentId;
-     //console.log('current/latest id', currentId);
-
+    let currentId = latest[0].documentId;
+     
     data.map(doc => {
 
         let li = document.createElement('li');
@@ -151,18 +113,17 @@ function listDoc() {
             
             currentId = doc.documentId;
 
-            //console.log('nuvarande id', currentId );
-
             title.innerText = doc.title;
             textResult.innerHTML = doc.content;
             inputs.innerHTML = '';
             createDocBtn();
             editDocBtn(doc.documentId, doc.title, doc.content);
-            
+                        
+            console.log('nuvarande id', currentId );
         })
 
     })
-    createDocBtn();
+    //createDocBtn();
     //editDocBtn();
 })
 }
@@ -170,6 +131,63 @@ function listDoc() {
 listDoc();
 
 
+// Knapp redigera dokument
+
+function editDocBtn(documentId, title, content) { // från map loopen i list/print
+    console.log('edit doc btn', documentId);
+    editBtnBox.appendChild(editBtn); 
+  
+    // Redigera
+    editBtn.addEventListener('click', () => {
+        //editDocBtn(documentId, title, content);
+        
+        createBtnBox.innerHTML = '';
+        editBtnBox.innerHTML = '';
+        title.innerHTML = '';
+        textResult.innerHTML = '';
+        inputs.prepend(inputTitle);
+        inputs.appendChild(textArea);
+        tinyMce();
+        
+        console.log('redigera', documentId);
+        inputTitle.value = title;
+        textArea.value = content;
+
+        inputs.appendChild(saveEditBtn);
+        
+    })
+    
+    // Spara ändringar PATCH dokument
+
+    saveEditBtn.addEventListener('click', () => {
+        
+        let editDoc = {
+            title: inputTitle.value,
+            content: textArea.value,
+            userId: 1
+        }
+        console.log('id', documentId);
+        console.log('spara', editDoc);
+        
+        fetch('http://localhost:3000/documents/' + documentId, {
+        method:'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editDoc)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('spara doc', textArea.value);
+        })
+        inputTitle.value = '';
+        textArea.value = '';
+        docList.innerHTML = '';
+        inputs.innerHTML = '';
+        listDoc();
+
+    })
+}
 
 
 // Skapa POST dokument

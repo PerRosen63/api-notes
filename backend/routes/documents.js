@@ -44,13 +44,14 @@ router.post('/', (req, res) => {
 })
 
 /* PATCH documents */
-router.patch('/', (req, res) => {
+router.patch('/:documentId', (req, res) => {
+  let documentId = req.params.documentId;
   console.log('hej patch'); 
 
   let title = req.body.title;
   let content = req.body.content;
 
-  let documentId = req.body.documentId;
+  //let documentId = req.body.documentId;
   console.log(documentId);
 
   req.app.locals.con.connect((err) => {
