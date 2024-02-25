@@ -1,6 +1,19 @@
 let main = document.getElementById('main');
 
-let loginBtn = document.createElement('loginBtn');
+//Log in
+const loginBox = document.getElementById('loginBox');
+
+let userInput = document.createElement('input');
+userInput.setAttribute('id', 'userInput');
+userInput.setAttribute('placeholder', 'User:')
+
+let passInput = document.createElement('input');
+passInput.setAttribute('id', 'passInput');
+passInput.setAttribute('placeholder', 'Password:');
+
+let loginBtn = document.createElement('button');
+loginBtn.setAttribute('id', 'loginBtn');
+
 
 let leftCol = document.getElementById('leftCol');
 let docList = document.getElementById('docList');
@@ -74,6 +87,13 @@ tinymce.init({
     }
 })
 }
+
+//Login
+
+loginBox.appendChild(userInput);
+loginBox.appendChild(passInput);
+loginBox.appendChild(loginBtn);
+loginBtn.innerText = 'Logga in';
 
 // Knapp Skapa dokument
 
@@ -179,7 +199,7 @@ function listDoc() {
 })
 }
 
-listDoc();
+//listDoc();
 
 
 // Knapp redigera dokument

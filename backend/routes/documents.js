@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
             res.json({message: "document sparad"}); 
         })
     })
-})
+}) 
 
 /* PATCH documents */
 router.patch('/:documentId', (req, res) => {
