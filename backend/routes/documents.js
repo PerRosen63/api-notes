@@ -5,7 +5,7 @@ const mysql = require('mysql2');
 
 /* GET document listing. */
 router.get('/', function(req, res, next) {
-    //res.send('productlines');
+    //res.send('users');
     
   
     let sql = `SELECT documentId, title, content, createDate, userId FROM documents`;
@@ -70,10 +70,10 @@ router.patch('/:documentId', (req, res) => {
 })
 
 /* DELETE document */
-router.delete('/', (req, res) => {
+router.delete('/:documentId', (req, res) => {
   console.log('hej delete'); 
 
-  let documentId = req.body.documentId;
+  let documentId = req.params.documentId;
   console.log(documentId);
 
   req.app.locals.con.connect((err) => {
