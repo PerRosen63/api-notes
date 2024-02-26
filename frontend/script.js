@@ -15,6 +15,7 @@ let loginBtn = document.createElement('button');
 loginBtn.setAttribute('id', 'loginBtn');
 
 
+// Get containers
 let leftCol = document.getElementById('leftCol');
 let docList = document.getElementById('docList');
 
@@ -43,7 +44,6 @@ editBtn.setAttribute('id', 'editBtn');
 editBtn.innerText = 'Redigera dokument';
 
 // Delete btn
-
 let deleteBtnBox = document.createElement('deleteBtnBox');
 leftCol.appendChild(deleteBtnBox);
 let deleteBtn = document.createElement('button');
@@ -95,6 +95,38 @@ loginBox.appendChild(passInput);
 loginBox.appendChild(loginBtn);
 loginBtn.innerText = 'Logga in';
 
+
+/**********************Skapa Login user dokument**********************/
+
+loginBtn.addEventListener('click', () => {
+    console.log('loginbtn');
+
+    let loginUser = {
+        userName: userInput.value,
+        password: passInput.value
+    }
+
+    fetch('http://localhost:3000/users/login/', {
+    method:'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(loginUser)
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('id', data);
+    })
+    /* inputTitle.value = '';
+    textArea.value = '';
+    docList.innerHTML = '';
+    inputs.innerHTML = '';
+    listDoc(); */
+    
+})
+
+
+
 // Knapp Skapa dokument
 
 function createDocBtn() {
@@ -134,8 +166,6 @@ deleteBtn.addEventListener('click', function deleteDocBtn() {
 }
 
 // List documents sidebar
-
-
 
 function listDoc() {        
 

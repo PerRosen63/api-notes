@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST login user. */
-router.post('/login', function(req, res, next) {
+router.post('/login/', function(req, res, next) {
   
   let postedUser = req.body.userName;
   console.log('posted user', postedUser);
@@ -48,15 +48,13 @@ router.post('/login', function(req, res, next) {
         
       if (postedUser === data[user].userName && postedPass === passOrig) {
         console.log('hittade', data[user].userName + passOrig);
-        res.json({message: 'Rätt inloggning!'});
+        res.json(data[user].id);
         return;
       }
     }
     console.log('fel');
     res.status(401).json({message: 'Fel email eller password!'});
-
-    
-      
+          
     })
 });
 
