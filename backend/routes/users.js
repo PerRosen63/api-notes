@@ -22,39 +22,43 @@ router.get('/', function(req, res, next) {
     res.json(data);
     
     console.log(password); 
-
-      /* const kryptPass = data.password; 
-      const origPass = CryptoJS.AES.decrypt(kryptPass, saltnyckel).toString(CryptoJS.enc.Utf8);
-      console.log('dekrypterat', origPass); */
-
     })
 });
 
 /* POST login user. */
 router.post('/login', function(req, res, next) {
   
-  let id = req.body.id;
-  console.log('userId', id);
+  let postedUser = req.body.userName;
+  console.log('posted user', postedUser);
+  let postedPass = req.body.password;
+  console.log('posted pass', postedPass);
   
-  let sql = `SELECT password FROM users WHERE id = ?`;
-  let values = [id];
-
-  //const password = CryptoJS.AES.decrypt(password, saltnyckel).toString(CryptoJS.enc.Utf8);
-
-  
-  req.app.locals.con.query(sql, values, function(err, data) {
+  let sql = `SELECT * FROM users`;
+   
+  req.app.locals.con.query(sql, function(err, data) {
     if (err) {
       console.log(err);
     }
-    console.log('data', data); 
-  
-    //const val = Object.values(data);
-    //res.json({password});
-    
 
+    for (user in data) {
+
+        //dekryptering
+        const kryptPass = data[user].password;
+        let passOrig = CryptoJS.AES.decrypt(kryptPass, saltnyckel).toString(CryptoJS.enc.Utf8);
+        
+      if (postedUser === data[user].userName && postedPass === passOrig) {
+        console.log('hittade', data[user].userName + passOrig);
+        res.json({message: 'Rätt inloggning!'});
+        return;
+      }
+    }
+    console.log('fel');
+    res.status(401).json({message: 'Fel email eller password!'});
+
+    
+      
     })
 });
-
 
 
 /* POST users */
@@ -63,8 +67,7 @@ router.post('/', (req, res) => {
 
   let userName = req.body.userName;
   let password = req.body.password;
-
-  //const password = 'Mittpw'; 
+ 
   console.log(password); 
 
   const kryptPass = CryptoJS.AES.encrypt(password, saltnyckel).toString();

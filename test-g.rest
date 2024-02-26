@@ -51,7 +51,8 @@ POST http://localhost:3000/users/login
 Content-Type: application/json
 
 { 
-  "id": 7
+  "userName": "Fnatte",
+  "password": "1010"
 }
 
 ###
@@ -61,8 +62,8 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 { 
-  "userName": "Tjatte",
-  "password": "0101"
+  "userName": "Rod",
+  "password": "Rodpass"
 }
 
 ###
