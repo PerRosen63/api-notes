@@ -6,6 +6,8 @@ NotesPress är en s.k. headless applikation där data sparas i en relationsdatab
 
 ### Skiss över databasen med kopplingar (foreign keys)
 
+Dessa användare och passwords fungerar vid test.
+
 ![](db.jpg)
 
 ### Kryptering av password i users-tabellen
