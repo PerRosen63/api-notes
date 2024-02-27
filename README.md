@@ -10,4 +10,4 @@ NotesPress är en s.k. headless applikation där data sparas i en relationsdatab
 
 ### Krypering i users-tabellen
 
-![](crypto.jpg)
+![](crypto.JPG)
