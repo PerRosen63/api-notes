@@ -6,4 +6,4 @@ NotesPress är en s.k. headless applikation där data sparas i en relationsdatab
 
 ### Skiss över databasen med kopplingar (foreign keys)
 
-![](https://github.com/plugga-tech/notes-PerRosen63/frontend/db.jpg)
+![](frontend/db.jpg)
