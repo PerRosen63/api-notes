@@ -66,7 +66,8 @@ router.post('/', (req, res) => {
   let userName = req.body.userName;
   let password = req.body.password;
  
-  console.log(password); 
+  console.log('userName', userName); 
+  console.log('password', password); 
 
   const kryptPass = CryptoJS.AES.encrypt(password, saltnyckel).toString();
   console.log('kryptPass', kryptPass);

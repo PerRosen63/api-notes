@@ -1,6 +1,6 @@
 let main = document.getElementById('main');
 
-//Log in
+// Log in
 const loginBox = document.getElementById('loginBox');
 
 let userInput = document.createElement('input');
@@ -15,6 +15,23 @@ let loginBtn = document.createElement('button');
 loginBtn.setAttribute('id', 'loginBtn');
 
 
+// Skapa user
+
+const userRegBox = document.getElementById('userRegBox');
+
+let userRegInput = document.createElement('input');
+userRegInput.setAttribute('id', 'userRegInput');
+userRegInput.setAttribute('placeholder', 'Register user:');
+
+let passRegInput = document.createElement('input');
+passRegInput.setAttribute('id', 'passRegInput');
+passRegInput.setAttribute('placeholder', 'Register password:');
+
+let regBtn = document.createElement('button');
+regBtn.setAttribute('id', 'regBtn');
+regBtn.innerText = 'Registrera användare!';
+
+
 // Get containers
 let leftCol = document.getElementById('leftCol');
 let docList = document.getElementById('docList');
@@ -24,27 +41,30 @@ title.setAttribute('id', 'title');
 const textResult = document.createElement('div');
 textResult.setAttribute('id', 'textResult');
 
-leftCol.prepend(textResult);
-leftCol.prepend(title);
-
-
-
 //Create btn
-let createBtnBox = document.createElement('createBtnBox');
+let createBtnBox = document.createElement('div');
+createBtnBox.setAttribute('id', 'createBtnBox');
 main.prepend(createBtnBox);
 let createBtn = document.createElement('button');
 createBtn.setAttribute('id', 'createBtn');
 createBtn.innerText = 'Skapa dokument';
 
+
+leftCol.prepend(textResult);
+leftCol.prepend(title);
+
+
 //Edit btn
-let editBtnBox = document.createElement('editBtnBox');
+let editBtnBox = document.createElement('div');
+editBtnBox.setAttribute('id', 'editBtnBox');
 leftCol.appendChild(editBtnBox);
 let editBtn = document.createElement('button');
 editBtn.setAttribute('id', 'editBtn');
 editBtn.innerText = 'Redigera dokument';
 
 // Delete btn
-let deleteBtnBox = document.createElement('deleteBtnBox');
+let deleteBtnBox = document.createElement('div');
+deleteBtnBox.setAttribute('id', 'deleteBtnBox');
 leftCol.appendChild(deleteBtnBox);
 let deleteBtn = document.createElement('button');
 deleteBtn.setAttribute('id', 'deleteBtn');
@@ -88,15 +108,39 @@ tinymce.init({
 })
 }
 
-//Login
+// Check if logged in
 
-loginBox.appendChild(userInput);
-loginBox.appendChild(passInput);
-loginBox.appendChild(loginBtn);
-loginBtn.innerText = 'Logga in';
+if (localStorage.getItem('id')) {
+    printLogOutBtn();
+    listDoc();
+} else {
+    printLogInBtn();
+}
 
+/*******************Skapa user********************/
+regBtn.addEventListener('click', () => {
+    console.log('loginbtn');
 
-/**********************Skapa Login user dokument**********************/
+    let regUser = {
+        userName: userRegInput.value,
+        password: passRegInput.value
+    }
+console.log(regUser);
+    fetch('http://localhost:3000/users/', {
+    method:'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(regUser)
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('ny user', data);
+    
+    })
+
+})
+/**********************Login user**********************/
 
 loginBtn.addEventListener('click', () => {
     console.log('loginbtn');
@@ -116,14 +160,44 @@ loginBtn.addEventListener('click', () => {
     .then(res => res.json())
     .then(data => {
         console.log('id', data);
+
+        
+        //logga in eller ut
+
+        if (localStorage.getItem('id')) { //klick ut
+            localStorage.removeItem('id');
+            leftCol.innerHTML = '';
+            docList.innerHTML = '';
+            createBtnBox.innerHTML = '';
+            printLogInBtn();
+        } else {
+            localStorage.setItem('id', JSON.stringify(data)); //klick in
+            listDoc();
+            
+            printLogOutBtn();    
+        }
+        
+       
     })
-    /* inputTitle.value = '';
-    textArea.value = '';
-    docList.innerHTML = '';
-    inputs.innerHTML = '';
-    listDoc(); */
     
 })
+
+function printLogOutBtn() {
+    userRegBox.innerHTML = '';
+    loginBox.innerHTML = '';
+    loginBox.appendChild(loginBtn);
+    loginBtn.innerText = 'Logga ut';
+}
+
+function printLogInBtn() {
+    loginBox.appendChild(userInput);
+    loginBox.appendChild(passInput);
+    loginBox.appendChild(loginBtn);
+    loginBtn.innerText = 'Logga in';
+    userRegBox.appendChild(userRegInput);
+    userRegBox.appendChild(passRegInput);
+    userRegBox.appendChild(regBtn);
+}
 
 
 
@@ -172,23 +246,27 @@ function listDoc() {
     fetch('http://localhost:3000/documents')
     .then(res => res.json())
     .then(data => {
+
+    // Ta fram dokument för inloggad
+    const userIdDocs = data.filter((doc) => doc.userId == localStorage.getItem('id'));
+    console.log('userIdDocs', userIdDocs);
     
     // Title and content from Latest date document
-    const latest = data.sort((a ,b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime());
+    /* const latest = data.sort((a ,b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime());
    
     textResult.innerHTML = latest[0].content;
-    title.innerText = latest[0].title;
+    title.innerText = latest[0].title; */
     // End latest
 
-    let currentId = latest[0].documentId;
+    /* let currentId = latest[0].documentId;
     let currentTitle = latest[0].title;
-    let currentContent = latest[0].content;
+    let currentContent = latest[0].content; */
     
-    let clickedArr = [];
+    //let clickedArr = [];
     
     docList.innerHTML = '';
 
-    data.map(doc => {
+    userIdDocs.map(doc => {
 
         let li = document.createElement('li');
         let span = document.createElement('span');
@@ -199,30 +277,19 @@ function listDoc() {
         docList.appendChild(li);
         li.appendChild(span);
 
-
         // Click in list to print content for clicked id
         li.addEventListener('click', function removeLi() {
-            
-            /* currentId = doc.documentId;
-            currentTitle = doc.title;
-            currentContent = doc.content; */
-            
-            clickedArr.push(doc.documentId); 
-            console.log(clickedArr);  
 
             title.innerText = doc.title;
             textResult.innerHTML = doc.content;
             inputs.innerHTML = '';
-            editDocBtn(doc.documentId, doc.title, doc.content);
             deleteBtnBox.appendChild(deleteBtn);
             deleteDocBtn(doc.documentId);
+            editDocBtn(doc.documentId, doc.title, doc.content);
             li.removeEventListener("click", removeLi, false); //REMOVED EVENTLISTENER          
         }, true)            
-
-        
        
     })
-    //console.log('utanför', currentId);
     
     createDocBtn();
 
@@ -269,14 +336,9 @@ console.log('edit doc btn', documentId);
         let editDoc = {
             title: inputTitle.value,
             content: textArea.value,
-            userId: 1
+            userId: localStorage.getItem('id')
         }
 
-        /* let editDoc = {
-            title: 'test title',
-            content: 'test content',
-            userId: 1
-        } */
         console.log('id', documentId);
         console.log('spara', editDoc);
         
@@ -310,8 +372,10 @@ console.log('edit doc btn', documentId);
         let saveDoc = {
             title: inputTitle.value,
             content: textArea.value,
-            userId: 1
+            userId: localStorage.getItem('id')
         }
+
+        console.log('localStorage', localStorage.getItem('id'));
 
         fetch('http://localhost:3000/documents', {
         method:'POST',

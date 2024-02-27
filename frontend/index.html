@@ -12,6 +12,23 @@
         header, main {
             max-width: 1000px;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            margin-bottom: 10px;
+        }
+        #loginBox {
+            order: 1;
+            text-align: right;
+        }
+        #createBtnBox {
+            order: 2;
+        }
+        #container {
+            order: 3;
+            background: lightgrey;
+            padding: 20px;
         }
         #container, #leftCol {
             display: flex;
@@ -35,6 +52,8 @@
     </header>
     <main id="main">
         <div id="loginBox"></div>
+        <div id="userRegBox"></div>
+
         <div id="container" >
             <div id="leftCol">
                
