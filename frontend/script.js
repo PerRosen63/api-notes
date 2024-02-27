@@ -172,7 +172,7 @@ loginBtn.addEventListener('click', () => {
             printLogInBtn();
         } else {
             localStorage.setItem('id', JSON.stringify(data)); //klick in
-            listDoc();
+            //listDoc();
             
             printLogOutBtn();    
         }
@@ -187,6 +187,7 @@ function printLogOutBtn() {
     loginBox.innerHTML = '';
     loginBox.appendChild(loginBtn);
     loginBtn.innerText = 'Logga ut';
+    listDoc();
 }
 
 function printLogInBtn() {
@@ -261,9 +262,7 @@ function listDoc() {
     /* let currentId = latest[0].documentId;
     let currentTitle = latest[0].title;
     let currentContent = latest[0].content; */
-    
-    //let clickedArr = [];
-    
+        
     docList.innerHTML = '';
 
     userIdDocs.map(doc => {
